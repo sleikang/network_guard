@@ -15,7 +15,9 @@ class Api:
             config = yaml_config.get_config()
             if config is None:
                 log().error(f"启动失败, 请检查配置文件")
-                return False
+                return
+            if not self.__connect_ssh__(config=config):
+                return
             network = Network()
             err_num = 0
             while True:
@@ -62,6 +64,26 @@ class Api:
 
                 except Exception as e:
                     log().error(f"异常错误, {e}")
+
         except Exception as e:
             log().error(f"启动失败, {e}")
+
+    def __connect_ssh__(self, config):
+        try:
+            # 创建 SSH 客户端
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            # 连接远程服务器
+            log().error(f"尝试连接SSH")
+            client.connect(
+                hostname=config["openwrt"]["host"],
+                port=config["openwrt"]["port"],
+                username=config["openwrt"]["username"],
+                password=config["openwrt"]["password"],
+            )
+            log().error(f"连接SSH成功")
+            client.close()
+            return True
+        except Exception as e:
+            log().error(f"SSH连接失败, {e}")
         return False
