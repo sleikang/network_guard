@@ -1,0 +1,19 @@
+openwrt:
+    # 路由器地址
+    host: 192.168.100.1
+    # 路由器用户名
+    username: root
+    # 路由器密码
+    password: password
+    # 路由器SSH端口
+    port: 22
+
+api:
+    # 尝试网络请求地址 支持多个地址 只要一个请求成功即认为网络正常
+    urls:
+        - https://www.tsa.cn/api/time/getCurrentTime
+        - https://f.m.suning.com/api/ct.do
+        - https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp
+        - https://vv.video.qq.com/checktime?otype=json
+    # 每次查询间隔秒数 当三次连续失败即重启WAN
+    sleep: 300
